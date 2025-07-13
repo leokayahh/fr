@@ -56,78 +56,80 @@
 
 <div class="desc" >
 
-	<div id="box" class="blink">Cliquez pour lancer la roulette  👇</div>
-	<button id="reroll">Lancer</button>
+	<div class"roulette">
+		<div id="box" class="blink">Cliquez pour lancer la roulette  👇</div>
+		<button id="reroll">Lancer</button>
+	
+		<script>
+		/* ------------------ helpers ------------------ */
+		const sleep = ms => new Promise(r => setTimeout(r, ms));
+		const parseCSV = txt => {
+		  const lines = txt.trim().split(/\r?\n/).slice(1);
+		  return lines.map(l=>{
+		    const i=l.indexOf(',');
+		    return {
+		      style: l.slice(0,i).replace(/^"|"$/g,''),
+		      desc : l.slice(i+1).replace(/^"|"$/g,'')
+		    };
+		  });
+		};
+		const random = arr => arr[Math.random()*arr.length|0];
+		
+		/* ----------------- chargement CSV ------------- */
+		let rows=[];
+		fetch('all_music_styles.csv')
+		  .then(r=>r.ok ? r.text() : Promise.reject(r.statusText))
+		  .then(txt=>rows = parseCSV(txt))
+		  .catch(err=>{
+		    const box=document.getElementById('box');
+		    box.textContent='❌ CSV non chargé';
+		    console.error(err);
+		  });
+		
+		/* ----------------- roulette ------------------- */
+		async function roulette(){
+		  const box = document.getElementById('box');
+		  const btn = document.getElementById('reroll');
+		  const sound = document.getElementById('click-sound');
+		  
+		  btn.disabled = true;                  // bloque le bouton pendant la course
+		  box.classList.add('blink');
+		
+		  let delay = 70;
+		  let spinsTotal = 25;
+		  for(let n=0;n<spinsTotal;n++){
+		    box.textContent=random(rows).style;
+		    sound.currentTime=0; sound.play().catch(()=>{});
+		    await sleep(delay);
+		    delay+=7;
+		  }
+		  
+		  const sound2 = document.getElementById('end-sound');
+		  const winner = random(rows);
+		  box.classList.remove('blink');
+		  box.innerHTML = `🎶 <b>${winner.style}</b> 🎶<br><i>${winner.desc}</i>`;
+		  btn.disabled = false;  
+		  sound2.currentTime = 0;      // remise à zéro
+		  sound2.play().catch(()=>{}); // ignore si bloqué
+		}
+		
+		/* ----------- lance au premier clic ------------ */
+		document.getElementById('box').addEventListener('click', function start(){
+		  this.removeEventListener('click', start); // évite relance
+		  this.classList.add('blink');
+		  roulette();
+		});
+		
+		/* ---------- hook button -------- */
+		document.getElementById('reroll').addEventListener('click', roulette);
+		
+		</script>
+	</div>
 
-	<audio id="click-sound" src="case_csgo.wav" preload="auto"></audio>
-	<audio id="end-sound" src="case2_csgo.wav" preload="auto"></audio>
+<audio id="click-sound" src="case_csgo.wav" preload="auto"></audio>
+<audio id="end-sound" src="case2_csgo.wav" preload="auto"></audio>
 	
 </div>
-
-<script>
-/* ------------------ helpers ------------------ */
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const parseCSV = txt => {
-  const lines = txt.trim().split(/\r?\n/).slice(1);
-  return lines.map(l=>{
-    const i=l.indexOf(',');
-    return {
-      style: l.slice(0,i).replace(/^"|"$/g,''),
-      desc : l.slice(i+1).replace(/^"|"$/g,'')
-    };
-  });
-};
-const random = arr => arr[Math.random()*arr.length|0];
-
-/* ----------------- chargement CSV ------------- */
-let rows=[];
-fetch('all_music_styles.csv')
-  .then(r=>r.ok ? r.text() : Promise.reject(r.statusText))
-  .then(txt=>rows = parseCSV(txt))
-  .catch(err=>{
-    const box=document.getElementById('box');
-    box.textContent='❌ CSV non chargé';
-    console.error(err);
-  });
-
-/* ----------------- roulette ------------------- */
-async function roulette(){
-  const box = document.getElementById('box');
-  const btn = document.getElementById('reroll');
-  const sound = document.getElementById('click-sound');
-  
-  btn.disabled = true;                  // bloque le bouton pendant la course
-  box.classList.add('blink');
-
-  let delay = 70;
-  let spinsTotal = 25;
-  for(let n=0;n<spinsTotal;n++){
-    box.textContent=random(rows).style;
-    sound.currentTime=0; sound.play().catch(()=>{});
-    await sleep(delay);
-    delay+=7;
-  }
-  
-  const sound2 = document.getElementById('end-sound');
-  const winner = random(rows);
-  box.classList.remove('blink');
-  box.innerHTML = `🎶 <b>${winner.style}</b> 🎶<br><i>${winner.desc}</i>`;
-  btn.disabled = false;  
-  sound2.currentTime = 0;      // remise à zéro
-  sound2.play().catch(()=>{}); // ignore si bloqué
-}
-
-/* ----------- lance au premier clic ------------ */
-document.getElementById('box').addEventListener('click', function start(){
-  this.removeEventListener('click', start); // évite relance
-  this.classList.add('blink');
-  roulette();
-});
-
-/* ---------- hook button -------- */
-document.getElementById('reroll').addEventListener('click', roulette);
-
-</script>
-
+	
 </body>
 </html>
