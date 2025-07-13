@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Music genre roulette</title>
+	<meta charset="UTF-8" />
+	
+	<link rel="icon" href="E:\Site web\Images\logo.jpg">
+	<link rel="stylesheet" href="E:\Site web\Projets\liste_Projets\Random_music\style_Random_music.css">	
+	
+</head>
+
+
+
+<body>
+
+<div class="headlogo">
+<p class="logo">
+	<a href="E:\Site web\Accueil.html".html"/><img width="80" height="80" src="E:\Site web\Images\logo.jpg" /></a>
+</p>
+
+<p class="logo_text">
+	<h1>kayahH</h1>
+	<h2> MP, Lycée Fabert</h2>
+</p>
+</div>
+
+<nav>
+	<ul class="headtitles">
+		
+		<li><a href="E:\Site web\Accueil.html">Accueil</a></li>
+	
+		<li class="deroulant"><a href="E:\Site web\Projets\Projets.html">Projets &ensp;</a>
+		  <ul class="sous">
+		  
+			<li><a href="E:\Site web\Projets\liste_Projets\TIPE2025.html">TIPE 2025</a></li>
+			<li><a href="#">TIPE 2026</a></li>
+			<li><a href="#">Jeu Snake automatisé</a></li>
+			<li><a href="#">Tiktok Uploader (non fonctionnel)</a></li>
+			
+		  </ul>
+		</li>
+		
+		<li class="deroulant"><a href="E:\Site web\Ressources\Ressources.html">Ressources &ensp;</a>
+		  <ul class="sous">
+		  
+			<li><a href="#">Programmes Python</a></li>
+			
+		  </ul>
+		</li>
+		
+		<li><a href="E:\Site web\A_propos\A_propos.html">À propos</a></li>
+	</ul>
+
+</nav>
+
+
+<div class="desc" >
+
+	<div id="box" class="blink">Cliquez pour lancer la roulette  👇</div>
+	<button id="reroll">Lancer</button>
+
+	<audio id="click-sound" src="case_csgo.wav" preload="auto"></audio>
+	<audio id="end-sound" src="case2_csgo.wav" preload="auto"></audio>
+	
+</div>
+
+<script>
+/* ------------------ helpers ------------------ */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const parseCSV = txt => {
+  const lines = txt.trim().split(/\r?\n/).slice(1);
+  return lines.map(l=>{
+    const i=l.indexOf(',');
+    return {
+      style: l.slice(0,i).replace(/^"|"$/g,''),
+      desc : l.slice(i+1).replace(/^"|"$/g,'')
+    };
+  });
+};
+const random = arr => arr[Math.random()*arr.length|0];
+
+/* ----------------- chargement CSV ------------- */
+let rows=[];
+fetch('all_music_styles.csv')
+  .then(r=>r.ok ? r.text() : Promise.reject(r.statusText))
+  .then(txt=>rows = parseCSV(txt))
+  .catch(err=>{
+    const box=document.getElementById('box');
+    box.textContent='❌ CSV non chargé';
+    console.error(err);
+  });
+
+/* ----------------- roulette ------------------- */
+async function roulette(){
+  const box = document.getElementById('box');
+  const btn = document.getElementById('reroll');
+  const sound = document.getElementById('click-sound');
+  
+  btn.disabled = true;                  // bloque le bouton pendant la course
+  box.classList.add('blink');
+
+  let delay = 70;
+  let spinsTotal = 25;
+  for(let n=0;n<spinsTotal;n++){
+    box.textContent=random(rows).style;
+    sound.currentTime=0; sound.play().catch(()=>{});
+    await sleep(delay);
+    delay+=7;
+  }
+  
+  const sound2 = document.getElementById('end-sound');
+  const winner = random(rows);
+  box.classList.remove('blink');
+  box.innerHTML = `🎶 <b>${winner.style}</b> 🎶<br><i>${winner.desc}</i>`;
+  btn.disabled = false;  
+  sound2.currentTime = 0;      // remise à zéro
+  sound2.play().catch(()=>{}); // ignore si bloqué
+}
+
+/* ----------- lance au premier clic ------------ */
+document.getElementById('box').addEventListener('click', function start(){
+  this.removeEventListener('click', start); // évite relance
+  this.classList.add('blink');
+  roulette();
+});
+
+/* ---------- hook button -------- */
+document.getElementById('reroll').addEventListener('click', roulette);
+
+</script>
+
+</body>
+</html>
