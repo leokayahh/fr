@@ -113,40 +113,101 @@ nav > ul li:hover .sous{
 
 
 
+
+
 .desc{
 	margin-left: 200px;
 	margin-right: 200px;
 	margin-top: 50px;	
-	margin-bottom: 50px;
-	position: relative;
+}
+
+.roulette{
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
 }
 
 #box{
-	font-size:2.2rem;
-	border:3px solid var(--fg);
-	padding:2rem 4rem;
-	border-radius:1rem;
+	font-size:2rem;
+	border:2px solid black;
+
+	border-radius:10px;
 	text-align:center;
-	min-width:15ch
-}
-
-button{
-	font-size:1rem;
-	padding:.6rem 1.2rem;
-	border-radius:.5rem;
-	border:2px solid var(--fg);
-	background:transparent;
-	color:var(--fg);
-	cursor:pointer
-}
-
-button:disabled{
-	opacity:.4;
-	cursor:not-allowed
-}
-
-.blink{
+	padding: 20px 20px;
+	min-width: 80%;
 	
 }
 
-@keyframes blink{from{opacity:.3}to{opacity:1}}
+@keyframes blink{
+	from{opacity:.3}to{opacity:1}
+}
+
+.roulette input{
+	display: none;
+}
+
+.roulette label{
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.roulette label span {
+	padding: 12px 40px;
+	background: #66c2ff;
+	color: white;
+	cursor: pointer;
+	border-radius:10px;
+}
+
+.roulette label span:hover {
+	opacity: 80%;
+}
+
+#reroll{
+	font-size:1rem;
+	padding: 12px 40px;
+	margin-top: 10px;
+	
+	border-radius: 10px;
+	background: #5cd65c;
+	color: white;
+	
+	cursor: pointer;
+	text-align: center;
+}
+
+#reroll:disabled{
+	opacity: .4;
+	cursor:not-allowed;
+}
+
+#reroll:hover{
+	opacity: 80%;
+}
+
+
+
+.desc ul{
+	list-style-type: none;
+	padding-left: 20px;
+	margin-top: 50px;
+}
+
+.desc .liens a{
+    display: block;
+    text-decoration: none;
+    color: black;
+    border-bottom: 2px solid transparent;
+    padding: 3px 0px;
+	border-bottom: solid;
+	border-width: 0.5px;
+	border-color: #cccccc;
+}
+.desc .liens a:hover{
+    color: orange;
+    border-bottom: 2px solid gold;
+	
+}
+
+
