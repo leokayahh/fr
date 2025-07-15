@@ -1,4 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
 
+:root {
+  --green: #b8d953;
+  --lilac: #333399;
+  --pink: #333399;
+  --dark-green: #529a91;
+  --peach: #333399;
+  --grey: #999999;
+}
 
 *{
     margin: 0px;
@@ -215,3 +224,130 @@ nav > ul li:hover .sous{
 	padding-left: 20px;
 }
 
+.credits{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 20%;
+}
+
+.bizzy p{
+  font-size: 3vw;
+   font-family: 'Staatliches', sans-serif;
+  margin-top: 30px;
+}
+
+.bizzy{
+	width: 30%;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.kayahh1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-height: 10px;
+  text-align: center;
+}
+
+@keyframes fontGrow {
+  0% {
+	transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(2);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.bizzy-letters {
+  animation-name: fontGrow;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  transform-origin: top;
+  transition-timing-function: ease-in-out;
+}
+
+.letter-k {
+  color: var(--grey);
+}
+
+.letter-a1 {
+  color: var(--green);
+  animation-delay: 1s;
+}
+
+.letter-y {
+  color: var(--pink);
+}
+
+.letter-a2 {
+  color: var(--lilac);
+  animation-delay: 1s;
+}
+
+.letter-h1 {
+  color: var(--dark-green);
+}
+
+.letter-h2 {
+  color: var(--peach);
+  animation-delay: 1s;
+}
+
+.kayahh2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+@keyframes fontGrowReverse {
+  0% {
+    transform: scaleY(2);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(2);
+  }
+}
+
+.bizzy-letters-B {
+  animation-name: fontGrowReverse;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  transform-origin: bottom;
+  transition-timing-function: ease-in-out;
+  
+}
+
+.letter-K {
+  color: #cbe69f;
+}
+
+.letter-A1 {
+  color: #e6e600;
+  animation-delay: 1s;
+  font-stretch: ultra-condensed;
+}
+
+.letter-Y {
+  color: #91d1df;
+}
+
+.letter-A2 {
+  color: #f7b407;
+  animation-delay: 1s;
+}
+
+.letter-H1 {
+  color: var(--grey);
+}
+
+.letter-H2 {
+  color: #e6e600;
+  animation-delay: 1s;
+}
