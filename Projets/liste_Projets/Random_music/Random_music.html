@@ -55,79 +55,90 @@
 
 
 <div class="desc" >
-
-	<div class"roulette">
-		<div id="box" class="blink">Cliquez pour lancer la roulette  👇</div>
-		<button id="reroll">Lancer</button>
 	
+	<div class="roulette">
+		
+		<div id="box" class="blink">Choisis ton CSV 👇</div>
+		<input type="file" id="csvfile" accept=".csv">
+		<label for="csvfile">
+			<span>Choisir un fichier</span>
+			<input type="file" id="csvfile" accept=".csv">
+		</label>
+		<button id="reroll" disabled>Lancer</button>
+
 		<script>
-		/* ------------------ helpers ------------------ */
-		const sleep = ms => new Promise(r => setTimeout(r, ms));
-		const parseCSV = txt => {
-		  const lines = txt.trim().split(/\r?\n/).slice(1);
-		  return lines.map(l=>{
-		    const i=l.indexOf(',');
-		    return {
-		      style: l.slice(0,i).replace(/^"|"$/g,''),
-		      desc : l.slice(i+1).replace(/^"|"$/g,'')
-		    };
-		  });
-		};
+		/* ---------- helpers ---------- */
+		const sleep = ms => new Promise(r=>setTimeout(r,ms));
+		const parseCSV = txt => txt.trim().split(/\r?\n/).slice(1).map(l=>{
+		  const i=l.indexOf(',');
+		  return {style:l.slice(0,i).replace(/^"|"$/g,''),desc:l.slice(i+1).replace(/^"|"$/g,'')};
+		});
 		const random = arr => arr[Math.random()*arr.length|0];
-		
-		/* ----------------- chargement CSV ------------- */
+
+		/* ---------- état global -------- */
 		let rows=[];
-		fetch('all_music_styles.csv')
-		  .then(r=>r.ok ? r.text() : Promise.reject(r.statusText))
-		  .then(txt=>rows = parseCSV(txt))
-		  .catch(err=>{
-		    const box=document.getElementById('box');
-		    box.textContent='❌ CSV non chargé';
-		    console.error(err);
-		  });
-		
-		/* ----------------- roulette ------------------- */
+
+		/* ---------- lecture du CSV ----- */
+		document.getElementById('csvfile').addEventListener('change', async e=>{
+		  const file = e.target.files[0];
+		  if(!file){return;}
+		  try{
+			const text = await file.text();
+			rows = parseCSV(text);
+			document.getElementById('box').textContent = 'Prêt à lancer !';
+			document.getElementById('reroll').disabled = false;
+		  }catch(err){
+			document.getElementById('box').textContent = '❌ Erreur de lecture';
+			console.error(err);
+		  }
+		});
+
+		/* ---------- roulette ---------- */
 		async function roulette(){
-		  const box = document.getElementById('box');
-		  const btn = document.getElementById('reroll');
-		  const sound = document.getElementById('click-sound');
-		  
-		  btn.disabled = true;                  // bloque le bouton pendant la course
+		  const box=document.getElementById('box');
+		  const btn=document.getElementById('reroll');
+		  const sound=document.getElementById('click-sound');
+		  const sound2=document.getElementById('end-sound');
+
+		  if(!rows.length){return;}         // sécurité
+
+		  btn.disabled=true;
 		  box.classList.add('blink');
-		
-		  let delay = 70;
+
+		  let delay=70;
 		  let spinsTotal = 25;
 		  for(let n=0;n<spinsTotal;n++){
-		    box.textContent=random(rows).style;
-		    sound.currentTime=0; sound.play().catch(()=>{});
-		    await sleep(delay);
-		    delay+=7;
+			box.textContent=random(rows).style;
+			sound.currentTime=0; sound.play().catch(()=>{});
+			await sleep(delay);
+			delay+=4;
 		  }
-		  
-		  const sound2 = document.getElementById('end-sound');
-		  const winner = random(rows);
+
+		  const winner=random(rows);
 		  box.classList.remove('blink');
-		  box.innerHTML = `🎶 <b>${winner.style}</b> 🎶<br><i>${winner.desc}</i>`;
-		  btn.disabled = false;  
+		  box.innerHTML=`🎶 <b>${winner.style}</b> 🎶<br><i>${winner.desc}</i>`;
+		  btn.disabled=false;
 		  sound2.currentTime = 0;      // remise à zéro
 		  sound2.play().catch(()=>{}); // ignore si bloqué
 		}
-		
-		/* ----------- lance au premier clic ------------ */
-		document.getElementById('box').addEventListener('click', function start(){
-		  this.removeEventListener('click', start); // évite relance
-		  this.classList.add('blink');
-		  roulette();
-		});
-		
-		/* ---------- hook button -------- */
-		document.getElementById('reroll').addEventListener('click', roulette);
-		
-		</script>
-	</div>
 
-<audio id="click-sound" src="case_csgo.wav" preload="auto"></audio>
-<audio id="end-sound" src="case2_csgo.wav" preload="auto"></audio>
+		/* ---------- bouton relancer ---- */
+		document.getElementById('reroll').addEventListener('click', roulette);
+		</script>		
+		
+	</div>
+	
+	<ul class="liens">
+	
+		<li><a href="https://leokayahh.github.io/fr/Projets/liste_Projets/Random_music/all_music_styles.csv">&#10132; Tableur de tous les styles/genres musicaux (Source : Wikipedia)</a></li>
+	
+	</ul>
+	
+</div>
+
+<audio id="click-sound" src="https://leokayahh.github.io/fr/Projets/liste_Projets/Random_music/case_csgo.wav" preload="auto"></audio>
+<audio id="end-sound" src="https://leokayahh.github.io/fr/Projets/liste_Projets/Random_music/case2_csgo.wav" preload="auto"></audio>
+
 	
 </div>
 	
