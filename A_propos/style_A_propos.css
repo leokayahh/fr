@@ -125,9 +125,93 @@ nav > ul li:hover .sous{
 
 }
 
+.rs_wrapper{
+	position: relative;
+	margin-top: 10px;
+	width: 50%;
+}
+
+.rs_wrapper a{
+	text-decoration: none;
+	color: black;
+}
+
+.rs{
+	border-radius: 20px;
+	
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	
+	margin-top: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 15px;	
+	width: 100%;
+	height: auto;
+}
+
+.rs img{
+	height: 30px;
+	width: 30px;
+}
+
+.rs.email img{
+	margin-right: 35px;
+}
+
+.rs_wrapper .twitter .nom{
+	margin-right: 57px;
+}
+
+.rs_wrapper .instagram .nom{
+	margin-right: 65px;
+}
+
+
+.rs.twitter{
+	background: linear-gradient(0.25turn, #3399ff, #007acc);
+	color: white;
+}
+
+.rs.twitter:hover{
+	opacity: 80%;
+}
+
+.rs.twitter img{
+	filter: brightness(30);
+}
+
+.rs.instagram{
+	background: linear-gradient(0.25turn, #FFD600, #FF7A00, #FF0069, #D300C5, #7638FA);
+	opacity: 80%;
+}
+
+.rs.instagram:hover{
+	opacity: 60%;
+}
+
+
+
+
+
+.rs.email{
+	background: linear-gradient(0.25turn, #bfbfbf, #808080);
+}
+
+.rs.email:hover{
+	opacity: 80%;
+}
+
+
+
+
+
+
 .desc .droits{
 	font-style : oblique;
 	font-size: 13px;
 	padding-top: 20px;
 	padding-left: 20px;
 }
+
